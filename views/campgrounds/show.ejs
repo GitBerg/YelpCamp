@@ -24,40 +24,40 @@
                     </button>
                     <% } %>
             </div>
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <%= campground.title %>
-                        </h5>
-                        <p class="card-text">
-                            <%= campground.description %>
-                        </p>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item text-muted">
-                            <%= campground.location %>
-                        </li>
-                        <li class="list-group-item">Submitted by <%= campground.author.username %>
-                        </li>
-                        <li class="list-group-item">$<%= campground.price %>/night</li>
-                    </ul>
-                    <% if (currentUser && campground.author.equals(currentUser)) { %>
-                        <div class="card-body">
-                            <a class="card-link btn btn-info" href="/campgrounds/<%=campground.id%>/edit">Edit</a>
-                            <form class="d-inline" action="/campgrounds/<%= campground.id %>?_method=DELETE"
-                                method="post">
-                                <button class="btn btn-danger" type="submit">Delete</button>
-                            </form>
-                        </div>
-                        <% } %>
-
-                            <footer class="card-footer text-muted">
-                                2 days ago
-                            </footer>
-
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <%= campground.title %>
+                    </h5>
+                    <p class="card-text">
+                        <%= campground.description %>
+                    </p>
                 </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item text-muted">
+                        <%= campground.location %>
+                    </li>
+                    <li class="list-group-item">Submitted by <%= campground.author.username %>
+                    </li>
+                    <li class="list-group-item">$<%= campground.price %>/night</li>
+                </ul>
+                <% if (currentUser && campground.author.equals(currentUser)) { %>
+                    <div class="card-body">
+                        <a class="card-link btn btn-info" href="/campgrounds/<%=campground.id%>/edit">Edit</a>
+                        <form class="d-inline" action="/campgrounds/<%= campground.id %>?_method=DELETE" method="post">
+                            <button class="btn btn-danger" type="submit">Delete</button>
+                        </form>
+                    </div>
+                    <% } %>
+
+                        <footer class="card-footer text-muted">
+                            2 days ago
+                        </footer>
+
+            </div>
         </div>
         <div class="col-6">
+            <div id='map' class="mb-3" style='width: 400px; height: 300px;'></div>
             <% if (currentUser) { %>
                 <h2 class="text-secondary text-center">Leave a Review</h2>
                 <form action="/campgrounds/<%= campground.id %>/reviews" method="post" class="mb-3 validation-form"
@@ -113,3 +113,9 @@
                         <% } %>
         </div>
     </div>
+
+    <script>
+        const mapToken = '<%=process.env.MAPBOX_TOKEN%>'
+        const camp = <%-JSON.stringify(campground)%>;
+    </script>
+    <script src="/javascripts/showPageMap.js"></script>

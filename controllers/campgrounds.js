@@ -1,4 +1,7 @@
 const Campground = require('../models/campground');
+const mbxGeoconding = require('@mapbox/mapbox-sdk/services/geocoding')
+const mapBoxToken = process.env.MAPBOX_TOKEN;
+const geocoder = mbxGeoconding({ accessToken: mapBoxToken })
 const { cloudinary } = require('../cloudinary')
 
 module.exports.index = async (req, res) => {
@@ -11,10 +14,16 @@ module.exports.renderNewForm = (req, res) => {
 }
 
 module.exports.createCampground = async (req, res, next) => {
+    const geoData = await geocoder.forwardGeocode({
+        query: req.body.campground.location,
+        limit: 1
+    }).send()
     const campground = new Campground(req.body.campground);
+    campground.geometry = geoData.body.features[0].geometry;
     campground.images = req.files.map(f => ({ url: f.path, filename: f.filename }))
     campground.author = req.user.id;
     await campground.save();
+    console.log(campground);
     req.flash('success', 'Successfully made a new campground!')
     res.redirect(`/campgrounds/${campground.id}`)
 }
@@ -31,6 +40,7 @@ module.exports.showCampground = async (req, res) => {
         req.flash('error', 'Cannot find that campground!');
         return res.redirect('/campgrounds')
     }
+    console.log();
     res.render('campgrounds/show', { campground })
 }
 
@@ -49,11 +59,11 @@ module.exports.updateCampground = async (req, res) => {
     const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }))
     campground.images.push(...imgs)
     await campground.save()
-    if(req.body.deleteImages){
-        for(let filename of req.body.deleteImages){
+    if (req.body.deleteImages) {
+        for (let filename of req.body.deleteImages) {
             cloudinary.uploader.destroy(filename)
         }
-       await campground.updateOne({$pull: {images: {filename: {$in: req.body.deleteImages}}}})
+        await campground.updateOne({ $pull: { images: { filename: { $in: req.body.deleteImages } } } })
     }
     req.flash('success', 'Successfully updated campground!')
     res.redirect(`/campgrounds/${campground.id}`)
