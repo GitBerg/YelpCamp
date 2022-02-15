@@ -21,7 +21,12 @@ module.exports.userRegister = async (req, res) => {
 }
 
 module.exports.renderLogin = (req, res) => {
-    res.render('users/login')
+    if(!req.user){
+        res.render('users/login');
+    }else{
+        req.flash("error","You Already Logged!");
+        res.redirect('/campgrounds');
+    }
 }
 
 module.exports.userLogin = (req, res) => {
