@@ -41,7 +41,7 @@
                     <% campground.images.forEach((img, i) =>{ %>
                     <div class="d-inline-block">
                         <div class="btn-group mb-2 d-block align-items-middle text-center" role="group" aria-label="Basic checkbox toggle button group">
-                            <input type="checkbox" class="btn-check" id="image-<%=i%>" name="deleteImages[]" autocomplete="off"  value="<%= img.filename%>" >
+                            <input type="checkbox" class="btn-check" id="image-<%=i%>" name="deleteImages[]" autocomplete="off"  value="<%= img.filename%>" <%= i=== 0 ?'disabled':''%> >
                             <label class="btn btn-outline-primary" for="image-<%=i%>">Delete</label>
                         </div>
                         <div class="mb-3">
@@ -52,9 +52,7 @@
                 </div>
                 <div class="mb-3">
                     <button class="btn btn-info">Update</button>
-                </div>
-                <div>
-                    <a href="/campgrounds/<%= campground.id %>">Back</a>
+                    <a class="d-inline-block btn btn-danger" href="/campgrounds/<%= campground.id %>">Back</a>
                 </div>
             </form>
         </div>
