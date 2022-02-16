@@ -38,6 +38,5 @@ module.exports.userLogin = (req, res) => {
 
 module.exports.userLogout = (req, res) => {
     req.logout()
-    req.flash('success', 'GoodBye!')
     res.redirect('/')
 }
