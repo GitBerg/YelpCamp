@@ -2,6 +2,7 @@ if(process.env.NODE_ENV !== "production"){
     require("dotenv").config();
 }
 
+const serverless = require('serverless-http')
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
@@ -110,3 +111,5 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Serving on port ${port}!`);
 })
+
+module.exports.handler = serverless(app);
