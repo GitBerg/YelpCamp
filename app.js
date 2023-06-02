@@ -26,7 +26,12 @@ const campgroundRoutes = require('./routes/campgrounds');
 const reviewRoutes = require('./routes/reviews');
 
 const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp';
-mongoose.connect(dbUrl);
+mongoose.connect(dbUrl).then(() => {
+    const port = process.env.PORT || 3000;
+    app.listen(port, () => {
+        console.log(`Serving on port ${port}!`);
+    })
+});
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "conection error:"));
@@ -107,9 +112,6 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render('error', { err });
 })
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-    console.log(`Serving on port ${port}!`);
-})
+
 
 module.exports.handler = serverless(app);
